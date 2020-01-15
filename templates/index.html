@@ -21,9 +21,9 @@
         {% if id %}
                 {% if recommendations %}
             <h3>Recommendations</h3>
-               {% for article in recommendations %}
+               {% for article, title in recommendations.items() %}
          <p>
-             <a href=https://labs.inspirehep.net/literature/{{ article }}> {{ article }}</a>
+             <a href=https://labs.inspirehep.net/literature/{{ article }}> {{ title  }}</a>
              </p>
               {% endfor %}
         {% else %}

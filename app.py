@@ -4,12 +4,14 @@ from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
+from inspirehep_api_wrapper.service.inspire_api import InspireAPI
 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'top secret!'
 bootstrap = Bootstrap()
 bootstrap.init_app(app)
+
 
 class InputForm(FlaskForm):
     id = StringField('id', validators=[DataRequired()])
@@ -50,10 +52,12 @@ def index():
     id = None
     recommendations = None
     form = InputForm()
+    inspire_api = InspireAPI()
     if form.validate_on_submit():
         id = form.id.data
         if id in model.vocabulary():
             recommendations = model.most_similar(id)
+            recommendations = {article: inspire_api.literature(article).to_record().title for article in recommendations}
     return render_template('index.html', form=form, id=id, recommendations=recommendations)
 
 if __name__ == '__main__':
