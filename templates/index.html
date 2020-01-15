@@ -18,5 +18,17 @@
                 {{ wtf.quick_form(form) }}
             </div>
         </div>
+        {% if id %}
+                {% if recommendations %}
+            <h3>Recommendations</h3>
+               {% for article in recommendations %}
+         <p>
+             <a href=https://labs.inspirehep.net/literature/{{ article }}> {{ article }}</a>
+             </p>
+              {% endfor %}
+        {% else %}
+            <h3>Sorry, we dont have recommendations for this id</h3>
+        {% endif %}
+                {% endif %}
     </div>
 {% endblock %}
