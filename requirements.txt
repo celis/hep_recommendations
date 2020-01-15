@@ -9,3 +9,4 @@ gensim==3.8.1
 Flask-WTF==0.14.2
 WTForms==2.2.1
 Flask-Bootstrap==3.3.7.1
+requests==2.21.0
