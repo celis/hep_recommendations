@@ -42,7 +42,7 @@ class GensimWrapper:
         return [recid for recid in self._model.vocab]
 
 model = GensimWrapper()
-model.load("model/article_embeddings.bin")
+model.load("model_artifact/article_embeddings.bin")
 
 
 @app.route('/', methods=['GET', 'POST'])
