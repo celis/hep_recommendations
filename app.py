@@ -19,7 +19,7 @@ def download_model_artifacts():
     with ZipFile('model_artifact/model.zip', 'r') as zipObj:
         zipObj.extractall(path='model_artifact')
 
-    #os.remove('model_artifact/model.zip')
+    os.remove('model_artifact/model.zip')
 
 
 
