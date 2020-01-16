@@ -21,7 +21,7 @@ def download_model_artifacts():
 
     os.remove('model_artifact/model.zip')
 
-
+download_model_artifacts()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'top secret!'
@@ -59,7 +59,7 @@ class GensimWrapper:
         """
         return [recid for recid in self._model.vocab]
 
-download_model_artifacts()
+
 
 model = GensimWrapper()
 model.load("model_artifact/model/article_embeddings.bin")
