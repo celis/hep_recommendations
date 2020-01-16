@@ -28,7 +28,7 @@ app.config['SECRET_KEY'] = 'top secret!'
 bootstrap = Bootstrap()
 bootstrap.init_app(app)
 
-download_model_artifacts()
+
 
 
 class InputForm(FlaskForm):
@@ -62,7 +62,7 @@ class GensimWrapper:
         return [recid for recid in self._model.vocab]
 
 
-
+download_model_artifacts()
 model = GensimWrapper()
 model.load("model_artifact/model/article_embeddings.bin")
 
