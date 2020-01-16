@@ -1,12 +1,12 @@
 {
     "model_config": {
         "sg": 1,
-        "min_count": 2,
-        "size": 50,
-        "window": 5,
+        "min_count": 5,
+        "size": 80,
+        "window": 4,
         "workers": 4,
         "hs": 1,
         "negative": 0,
-        "iter": 20
+        "iter": 6
     }
 }
