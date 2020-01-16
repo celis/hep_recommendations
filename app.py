@@ -61,7 +61,6 @@ class GensimWrapper:
         """
         return [recid for recid in self._model.vocab]
 
-
 download_model_artifacts()
 
 model = GensimWrapper()
