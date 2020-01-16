@@ -63,6 +63,7 @@ class GensimWrapper:
 
 
 download_model_artifacts()
+
 model = GensimWrapper()
 model.load("model_artifact/model/article_embeddings.bin")
 
