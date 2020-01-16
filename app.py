@@ -21,12 +21,14 @@ def download_model_artifacts():
 
     os.remove('model_artifact/model.zip')
 
-download_model_artifacts()
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'top secret!'
 bootstrap = Bootstrap()
 bootstrap.init_app(app)
+
+download_model_artifacts()
 
 
 class InputForm(FlaskForm):
