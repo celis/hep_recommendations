@@ -5,24 +5,10 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 from inspirehep_api_wrapper.service.inspire_api import InspireAPI
-from zipfile import ZipFile
 import boto3
-import os
 
 
 def download_model_artifacts():
-    s3_resource = boto3.resource(
-        "s3"
-    )
-    s3_resource.Bucket('similar-articles-data').download_file('model.zip', "model_artifact/model.zip")
-
-    with ZipFile('model_artifact/model.zip', 'r') as zipObj:
-        zipObj.extractall(path='model_artifact')
-
-    os.remove('model_artifact/model.zip')
-
-
-def download_model_artifacts_new():
     s3_resource = boto3.resource(
         "s3"
     )
@@ -68,7 +54,7 @@ class GensimWrapper:
         """
         return [recid for recid in self._model.vocab]
 
-download_model_artifacts_new()
+download_model_artifacts()
 
 model = GensimWrapper()
 model.load("model_artifact/article_embeddings.bin")
