@@ -22,7 +22,7 @@ bootstrap.init_app(app)
 
 
 class InputForm(FlaskForm):
-    article = StringField("article", validators=[DataRequired()])
+    article = StringField("Enter an INSPIRE article id", validators=[DataRequired()])
 
     submit = SubmitField("Submit")
 
