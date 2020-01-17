@@ -16,6 +16,7 @@ def download_model_artifacts():
 
 
 
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'top secret!'
 bootstrap = Bootstrap()
