@@ -67,10 +67,16 @@ def index():
     if form.validate_on_submit():
         article = form.article.data
         if article in model.vocabulary():
-            article = {"id": article, "record": inspire_api.literature(article).to_record()}
+            article = {
+                "id": article,
+                "record": inspire_api.literature(article).to_record(),
+            }
             recommendations = model.most_similar(article["id"])
             recommendations = [
-                {"id": recommendation, "record": inspire_api.literature(recommendation).to_record()}
+                {
+                    "id": recommendation,
+                    "record": inspire_api.literature(recommendation).to_record(),
+                }
                 for recommendation in recommendations
             ]
     return render_template(
