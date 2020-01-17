@@ -9,26 +9,22 @@ import boto3
 
 
 def download_model_artifacts():
-    s3_resource = boto3.resource(
-        "s3"
+    s3_resource = boto3.resource("s3")
+    s3_resource.Bucket("similar-articles-data").download_file(
+        "article_embeddings.bin", "model_artifact/article_embeddings.bin"
     )
-    s3_resource.Bucket('similar-articles-data').download_file('article_embeddings.bin', "model_artifact/article_embeddings.bin")
-
-
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'top secret!'
+app.config["SECRET_KEY"] = "top secret!"
 bootstrap = Bootstrap()
 bootstrap.init_app(app)
 
 
-
-
 class InputForm(FlaskForm):
-    id = StringField('id', validators=[DataRequired()])
+    article = StringField("article", validators=[DataRequired()])
 
-    submit = SubmitField('Submit')
+    submit = SubmitField("Submit")
 
 
 class GensimWrapper:
@@ -55,25 +51,33 @@ class GensimWrapper:
         """
         return [recid for recid in self._model.vocab]
 
+
 download_model_artifacts()
 
 model = GensimWrapper()
 model.load("model_artifact/article_embeddings.bin")
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route("/", methods=["GET", "POST"])
 def index():
-    id = None
+    article = None
     recommendations = None
     form = InputForm()
     inspire_api = InspireAPI()
     if form.validate_on_submit():
-        id = form.id.data
-        if id in model.vocabulary():
-            recommendations = model.most_similar(id)
-            recommendations = {article: inspire_api.literature(article).to_record().title for article in recommendations}
-    return render_template('index.html', form=form, id=id, recommendations=recommendations)
+        article = form.article.data
+        if article in model.vocabulary():
+            article = {"id": article, "record": inspire_api.literature(article).to_record()}
+            recommendations = model.most_similar(article["id"])
+            recommendations = [
+                {"id": recommendation, "record": inspire_api.literature(recommendation).to_record()}
+                for recommendation in recommendations
+            ]
+    return render_template(
+        "index.html", form=form, article=article, recommendations=recommendations
+    )
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     # Threaded option to enable multiple instances for multiple user access support
     app.run(threaded=True, port=5000)

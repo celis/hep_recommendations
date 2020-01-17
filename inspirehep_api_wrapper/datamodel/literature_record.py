@@ -6,6 +6,8 @@ class LiteratureRecord:
     Datamodel class for handling a literature record data
     """
 
+    MAX_AUTHORS = 3
+
     def __init__(self, data: Dict[str, Any]):
         self.data = data
 
@@ -30,6 +32,23 @@ class LiteratureRecord:
         """
         if "authors" in self.metadata:
             return [author.get("full_name") for author in self.metadata["authors"]]
+
+    @property
+    def authors_short(self) -> str:
+        if "authors" in self.metadata:
+            if len(self.metadata["authors"]) > self.MAX_AUTHORS:
+                return "; ".join(
+                    [
+                        author.get("full_name")
+                        for author in self.metadata["authors"][: self.MAX_AUTHORS]
+                    ]
+                    + ["et. al."]
+                )
+            else:
+                return "; ".join(
+                    [author.get("full_name") for author in self.metadata["authors"]]
+                )
+        return ""
 
     @property
     def doi(self) -> str:
@@ -58,6 +77,7 @@ class LiteratureRecord:
         """
         if "titles" in self.metadata:
             return self.metadata["titles"][0].get("title")
+        return ""
 
     @property
     def journal(self) -> Dict[str, Any]:
