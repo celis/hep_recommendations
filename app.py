@@ -22,6 +22,13 @@ def download_model_artifacts():
     os.remove('model_artifact/model.zip')
 
 
+def download_model_artifacts_new():
+    s3_resource = boto3.resource(
+        "s3"
+    )
+    s3_resource.Bucket('similar-articles-data').download_file('article_embeddings.bin', "model_artifact/article_embeddings.bin")
+
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'top secret!'
@@ -61,10 +68,10 @@ class GensimWrapper:
         """
         return [recid for recid in self._model.vocab]
 
-download_model_artifacts()
+download_model_artifacts_new()
 
 model = GensimWrapper()
-model.load("model_artifact/model/article_embeddings.bin")
+model.load("model_artifact/article_embeddings.bin")
 
 
 @app.route('/', methods=['GET', 'POST'])
