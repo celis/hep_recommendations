@@ -24,14 +24,14 @@
                        <p>
                            <a href=https://labs.inspirehep.net/literature/{{ article["id"] }}> "{{ article["record"].title  }}"
                            </a>
-                           <br by {{ article["record"].authors_short  }}
+                           <br> by {{ article["record"].authors_short  }}
                        </p>
                     <h4>Recommendations:</h4>
                          {% for recommendation in recommendations %}
                        <p>
                            <a href=https://labs.inspirehep.net/literature/{{ recommendation["id"] }}> "{{ recommendation["record"].title  }}"
                            </a>
-                           <br by {{ recommendation["record"].authors_short  }}
+                           <br> by {{ recommendation["record"].authors_short  }}
                        </p>
                          {% endfor %}
                {% else %}
