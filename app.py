@@ -6,13 +6,113 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 from inspirehep_api_wrapper.service.inspire_api import InspireAPI
 import boto3
+import configparser
+import os
 
 
-def download_model_artifacts():
-    s3_resource = boto3.resource("s3")
-    s3_resource.Bucket("similar-articles-data").download_file(
-        "article_embeddings.bin", "model_artifact/article_embeddings.bin"
+class Configuration:
+    """
+    Class for the configuration of the S3 access and the model artifact
+    """
+
+    CONFIG_FILE = "configs/config.ini"
+
+    def __init__(self):
+        self._parser = configparser.ConfigParser()
+        self._parser.read(self.CONFIG_FILE)
+
+    @property
+    def s3(self):
+        """
+        config parameters for S3 access
+        """
+        config = self._parser["s3"]
+        return {
+            "region_name": config.get("region_name", ""),
+            "bucket": config.get("bucket", ""),
+            "access_key": config.get("access_key", ""),
+            "secret_key": config.get("secret_key", ""),
+        }
+
+    @property
+    def model_artifact(self):
+        """
+        config parameters for the model artifact
+        """
+        config = self._parser["model_artifact"]
+        return config.get("path", "")
+
+
+class InputForm(FlaskForm):
+    """
+    Allows users to enter an INSPIRE article id
+    """
+
+    article = StringField("Enter an INSPIRE article id", validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+
+class GensimWrapper:
+    """
+    Wrapper around Gensim library with the basic functionalities we need, loading trained embeddings
+    and predicting the most similar items
+    """
+
+    def __init__(self):
+        self._model = None
+
+    def load(self, model_path: str):
+        """
+        Loads trained embeddings
+        """
+        self._model = KeyedVectors.load_word2vec_format(model_path, binary=True)
+
+    def most_similar(self, article: str, topn: int = 5):
+        """
+        Predicts most similar items
+        """
+        return [article[0] for article in self._model.similar_by_word(article, topn)]
+
+    def vocabulary(self):
+        """
+        Returns all articles which have embeddings
+        """
+        return [recid for recid in self._model.vocab]
+
+
+def download_model_artifacts(config: Configuration):
+    """
+    Downloads model artifact from S3
+    """
+    model_name, model_path = config.model_artifact.split("/")[-1], config.model_artifact
+
+    if config.s3["access_key"] and config.s3["secret_key"]:
+        access_key = config.s3["access_key"]
+        secret_key = config.s3["secret_key"]
+    else:
+        access_key = os.environ["AWS_ACCESS_KEY_ID"]
+        secret_key = os.environ["AWS_SECRET_ACCESS_KEY"]
+
+    boto3_client = boto3.client(
+        "s3",
+        region_name=config.s3["region_name"],
+        aws_access_key_id=access_key,
+        aws_secret_access_key=secret_key,
     )
+    boto3_client.download_file(config.s3["bucket"], model_name, model_path)
+
+
+def load_model(config: Configuration):
+    """
+    Loads trained model from disk if available, otherwise its first downloaded from S3.
+    """
+
+    if not os.path.exists(config.model_artifact):
+        download_model_artifacts(config)
+
+    model = GensimWrapper()
+    model.load(config.model_artifact)
+    return model
 
 
 app = Flask(__name__)
@@ -20,42 +120,9 @@ app.config["SECRET_KEY"] = "top secret!"
 bootstrap = Bootstrap()
 bootstrap.init_app(app)
 
+config = Configuration()
 
-class InputForm(FlaskForm):
-    article = StringField("Enter an INSPIRE article id", validators=[DataRequired()])
-
-    submit = SubmitField("Submit")
-
-
-class GensimWrapper:
-    """
-    """
-
-    def __init__(self):
-        """
-        :param
-        """
-        self._model = None
-
-    def load(self, model_path):
-        self._model = KeyedVectors.load_word2vec_format(model_path, binary=True)
-
-    def most_similar(self, article: str, topn: int = 5):
-        """
-        """
-        return [article[0] for article in self._model.similar_by_word(article, topn)]
-
-    def vocabulary(self):
-        """
-        Returns all record ids which have embeddings
-        """
-        return [recid for recid in self._model.vocab]
-
-
-download_model_artifacts()
-
-model = GensimWrapper()
-model.load("model_artifact/article_embeddings.bin")
+model = load_model(config)
 
 
 @app.route("/", methods=["GET", "POST"])
