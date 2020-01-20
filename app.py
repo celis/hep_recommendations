@@ -96,16 +96,11 @@ def download_model_artifacts(config: Configuration):
     """
     model_name, model_path = config.model_artifact.split("/")[-1], config.model_artifact
 
-    if config.s3["access_key"] and config.s3["secret_key"]:
-        access_key = config.s3["access_key"]
-        secret_key = config.s3["secret_key"]
-
-
     boto3_client = boto3.client(
         "s3",
         region_name=config.s3["region_name"],
-        aws_access_key_id=access_key,
-        aws_secret_access_key=secret_key,
+        aws_access_key_id=config.s3["access_key"],
+        aws_secret_access_key=config.s3["secret_key"],
     )
     boto3_client.download_file(config.s3["bucket"], model_name, model_path)
 
