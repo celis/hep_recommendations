@@ -26,13 +26,22 @@ class Configuration:
         """
         config parameters for S3 access
         """
-        config = self._parser["s3"]
-        return {
-            "region_name": config.get("region_name", ""),
-            "bucket": config.get("bucket", ""),
-            "access_key": config.get("access_key", ""),
-            "secret_key": config.get("secret_key", ""),
-        }
+        if os.path.exists(self.CONFIG_FILE):
+            config = self._parser["s3"]
+            return {
+                "region_name": config.get("region_name", ""),
+                "bucket": config.get("bucket", ""),
+                "access_key": config.get("access_key", ""),
+                "secret_key": config.get("secret_key", ""),
+            }
+        else:
+            return {
+                "region_name": os.environ["AWS_S3_REGION"],
+                "bucket": os.environ["S3_BUCKET_NAME"],
+                "access_key": os.environ["AWS_ACCESS_KEY_ID"],
+                "secret_key": os.environ["AWS_SECRET_ACCESS_KEY"],
+            }
+
 
     @property
     def model_artifact(self):
@@ -89,9 +98,7 @@ def download_model_artifacts(config: Configuration):
     if config.s3["access_key"] and config.s3["secret_key"]:
         access_key = config.s3["access_key"]
         secret_key = config.s3["secret_key"]
-    else:
-        access_key = os.environ["AWS_ACCESS_KEY_ID"]
-        secret_key = os.environ["AWS_SECRET_ACCESS_KEY"]
+
 
     boto3_client = boto3.client(
         "s3",

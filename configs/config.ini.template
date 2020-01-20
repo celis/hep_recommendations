@@ -1,0 +1,9 @@
+[s3]
+region_name=
+bucket=
+access_key=
+secret_key=
+
+
+[model_artifact]
+path=
