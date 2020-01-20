@@ -42,15 +42,16 @@ class Configuration:
                 "secret_key": os.environ["AWS_SECRET_ACCESS_KEY"],
             }
 
-
     @property
     def model_artifact(self):
         """
         config parameters for the model artifact
         """
-        config = self._parser["model_artifact"]
-        return config.get("path", "")
-
+        if os.path.exists(self.CONFIG_FILE):
+            config = self._parser["model_artifact"]
+            return config.get("path", "")
+        else:
+            return os.environ["MODEL_ARTIFACT_PATH"]
 
 class InputForm(FlaskForm):
     """
