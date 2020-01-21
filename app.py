@@ -126,7 +126,6 @@ bootstrap.init_app(app)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    global model
     article = None
     recommendations = None
     form = InputForm()
