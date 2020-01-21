@@ -123,13 +123,10 @@ app.config["SECRET_KEY"] = "top secret!"
 bootstrap = Bootstrap()
 bootstrap.init_app(app)
 
-config = Configuration()
-
-model = load_model(config)
-
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    global model
     article = None
     recommendations = None
     form = InputForm()
@@ -156,4 +153,6 @@ def index():
 
 if __name__ == "__main__":
     # Threaded option to enable multiple instances for multiple user access support
+    config = Configuration()
+    model = load_model(config)
     app.run(threaded=True, port=5000)
