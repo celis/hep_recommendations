@@ -2,18 +2,23 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 
-{% block title %} HEP Recommender {% endblock %}
+{% block head %}
+{{super()}}
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="{{ url_for('.static', filename='css/heroic-features.css') }}">
+{% endblock %}
+
+{% block title %} HEP Recommender - Find articles related to a given Inspire-HEP ID{% endblock %}
 
 <a class="navbar-brand" href="{{ url_for('main.index') }}">
-	HEP Recommender
+	HEP Recommender - Find articles related to a given Inspire-HEP ID
 </a>
-
 
 {% block navbar %}
 <nav class="navbar navbar-inverse" role="navigation">
 	<div class="container">
 		<a class="navbar-brand" href="{{ url_for('index') }}">
-			Recommender
+			HEP Recommender
 		</a>
 	</div>
 </nav>
