@@ -15,13 +15,15 @@
   <div class="container">
      <!-- Jumbotron Header -->
     <header class="jumbotron my-4">
-           {% if article %}
+      
        <div class="row">
            <div class="col-md-4">
              {{ wtf.quick_form(form) }}
            </div>
        </div>   
-       {% if recommendations %}
+      
+      {% if article %}
+      {% if recommendations %}
        <hr class="my-4">
        <p>
             <a target="_blank" rel="noopener noreferrer" href=https://labs.inspirehep.net/literature/{{ article["id"] }}> <h3> "{{ article["record"].title  }}" </h3>
