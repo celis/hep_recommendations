@@ -58,8 +58,8 @@ class InputForm(FlaskForm):
     Allows users to enter an INSPIRE article id
     """
 
-    article = StringField("Enter an INSPIRE article id", validators=[DataRequired()])
-    submit = SubmitField("Submit")
+    article = StringField("<h5> Enter an INSPIRE article id </h5>", validators=[DataRequired()])
+    submit = SubmitField("Find related articles")
 
 
 class GensimWrapper:

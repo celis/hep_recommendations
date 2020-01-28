@@ -5,7 +5,7 @@
 {% block navbar %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" role="navigation" >
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}"> <strong> HEP Recommender </strong></a>
+            <a class="navbar-brand" href="{{ url_for('index') }}"> <strong> HEP Recommender - Find related articles you missed </strong></a>
         </div>
     </nav>
 {% endblock %}
@@ -13,38 +13,33 @@
 {% block content %}
   <!-- Page Content -->
   <div class="container">
-
-    <!-- Jumbotron Header -->
      <!-- Jumbotron Header -->
     <header class="jumbotron my-4">
-        <div class="row">
-            <div class="col-md-3">
-                {{ wtf.quick_form(form) }}
-            </div>
-        </div>
            {% if article %}
-               {% if recommendations %}
-                    <br>
-                       <p>
-                            <a target="_blank" rel="noopener noreferrer" href=https://labs.inspirehep.net/literature/{{ article["id"] }}> <h2> "{{ article["record"].title  }}" </h2>
-                           </a>
-                           <h5> by {{ article["record"].authors_short  }} </h5>
-                       </p>
-                       <p> <a href=https://labs.inspirehep.net/literature/{{ article["id"] }} class="btn btn-primary"> Open on InspireHEP </a> 
-                       </p>
-                        
+       <div class="row">
+           <div class="col-md-4">
+             {{ wtf.quick_form(form) }}
+           </div>
+       </div>   
+       {% if recommendations %}
+       <hr class="my-4">
+       <p>
+            <a target="_blank" rel="noopener noreferrer" href=https://labs.inspirehep.net/literature/{{ article["id"] }}> <h3> "{{ article["record"].title  }}" </h3>
+           </a>
+           <h5> by {{ article["record"].authors_short  }} </h5>
+       </p>
+       <p> <a href=https://labs.inspirehep.net/literature/{{ article["id"] }} class="btn btn-primary"> Open on INSPIRE </a> 
+       </p>             
+                
     </header>
-
    <p class="text-center"> <h2> Recommendations </h2> <p>
 
 
     <!-- Page Features -->
- <div class="row text-center">
-
 
                          {% for recommendation in recommendations %}
-               <div class="col-lg-3 col-md-6 mb-4">
-                      <div class="card h-100">
+               
+                      <div class="card mb-4">
                           
                           <!--<img class="card-img-top" src="http://placehold.it/500x325" alt=""> -->
                           
@@ -56,10 +51,10 @@
                           </div>
                           
                           <div class="card-footer">
-                             <a href=https://labs.inspirehep.net/literature/{{ recommendation["id"] }} class="btn btn-primary"> Open on InspireHEP </a>
+                             <a href=https://labs.inspirehep.net/literature/{{ recommendation["id"] }} class="btn btn-primary btn-sm"> Open on INSPIRE </a>
                           </div>
                      </div>
-               </div>
+            
 
                          {% endfor %}
                {% else %}
