@@ -158,19 +158,21 @@ def index():
         if article['id'] in model.vocabulary():
             logging.info(f"recommendations for article {article['id']} served with Skip-Gram model")
             recommendations = model.most_similar(article["id"])
-        else:
+
+        elif article['record'].references:
             logging.info(f"recommendations for article {article['id']} served with backup model")
 
-            references_mean_vector = model.mean_vector( article['record'].references)
+            references_mean_vector = model.mean_vector(article['record'].references)
             recommendations = model.most_similar_by_vector(references_mean_vector)
 
-        recommendations = [
-            {
-                "id": recommendation,
-                "record": inspire_api.literature(recommendation).to_record(),
-            }
-            for recommendation in recommendations
-        ]
+        if recommendations:
+            recommendations = [
+                {
+                    "id": recommendation,
+                    "record": inspire_api.literature(recommendation).to_record(),
+                }
+                for recommendation in recommendations
+            ]
 
     return render_template(
         "index.html", form=form, article=article, recommendations=recommendations
