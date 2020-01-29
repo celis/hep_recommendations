@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from gensim.models import KeyedVectors
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
@@ -57,6 +57,8 @@ class InputForm(FlaskForm):
     """
     Allows users to enter an INSPIRE article id
     """
+    class Meta:
+        csrf = False
 
     article = StringField("<h5> Enter an INSPIRE article id </h5>", validators=[DataRequired()])
     submit = SubmitField("Find related articles")
@@ -126,15 +128,16 @@ bootstrap.init_app(app)
 config = Configuration()
 model = load_model(config)
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET"])
 def index():
     global model
     article = None
     recommendations = None
-    form = InputForm()
+    form = InputForm(request.args)
     inspire_api = InspireAPI()
-    if form.validate_on_submit():
-        article = form.article.data
+    if form.validate():
+        article = request.args.get("article")
+        print(article)
         if article in model.vocabulary():
             article = {
                 "id": article,
