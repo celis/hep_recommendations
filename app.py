@@ -6,7 +6,9 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 from inspirehep_api_wrapper.service.inspire_api import InspireAPI
 import boto3
+import numpy as np
 import configparser
+import logging
 import os
 
 
@@ -85,6 +87,16 @@ class GensimWrapper:
         """
         return [article[0] for article in self._model.similar_by_word(article, topn)]
 
+    def mean_vector(self, articles: list):
+        articles = [article for article in articles if article in self.vocabulary()]
+        if len(articles) >= 1:
+            return np.mean(self._model[articles], axis=0)
+        else:
+            return []
+
+    def most_similar_by_vector(self, article, topn: int = 5):
+        return [article[0] for article in self._model.similar_by_vector(article, topn)]
+
     def vocabulary(self):
         """
         Returns all articles which have embeddings
@@ -137,25 +149,39 @@ def index():
     inspire_api = InspireAPI()
     if form.validate():
         article = request.args.get("article")
-        print(article)
-        if article in model.vocabulary():
-            article = {
-                "id": article,
-                "record": inspire_api.literature(article).to_record(),
-            }
+
+        article = {
+            "id": article,
+            "record": inspire_api.literature(article).to_record(),
+        }
+
+        if article['id'] in model.vocabulary():
+            logging.info(f"recommendations for article {article['id']} served with Skip-Gram model")
             recommendations = model.most_similar(article["id"])
-            recommendations = [
-                {
-                    "id": recommendation,
-                    "record": inspire_api.literature(recommendation).to_record(),
-                }
-                for recommendation in recommendations
-            ]
+        else:
+            logging.info(f"recommendations for article {article['id']} served with backup model")
+
+            references_mean_vector = model.mean_vector( article['record'].references)
+            recommendations = model.most_similar_by_vector(references_mean_vector)
+
+        recommendations = [
+            {
+                "id": recommendation,
+                "record": inspire_api.literature(recommendation).to_record(),
+            }
+            for recommendation in recommendations
+        ]
+
     return render_template(
         "index.html", form=form, article=article, recommendations=recommendations
     )
 
 
 if __name__ == "__main__":
+
+    logging.basicConfig(
+        format="%(asctime)s : %(levelname)s : %(message)s", level=logging.INFO
+    )
+
     # Threaded option to enable multiple instances for multiple user access support
     app.run(threaded=True, port=5000)
