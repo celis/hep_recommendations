@@ -80,6 +80,15 @@ class LiteratureRecord:
         return ""
 
     @property
+    def preprint_year(self) -> str:
+        """
+        :return:
+        """
+        if "preprint_date" in self.metadata:
+            return self.metadata["preprint_date"].split('-')[0]
+        return ""
+
+    @property
     def journal(self) -> Dict[str, Any]:
         """
         returns journal information
