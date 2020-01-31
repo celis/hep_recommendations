@@ -33,7 +33,7 @@
        <p>
             <a target="_blank" rel="noopener noreferrer" href=https://labs.inspirehep.net/literature/{{ article["id"] }}> <h3> "{{ article["record"].title  }}" </h3>
            </a>
-           <h5> by {{ article["record"].authors_short  }} </h5>
+           <h5> by {{ article["record"].authors_short  }} {{ recommendation["record"].preprint_year}}</h5>
        </p>
        <p> <a href=https://labs.inspirehep.net/literature/{{ article["id"] }} class="btn btn-primary"> Open on INSPIRE </a> 
        </p>             
@@ -54,7 +54,7 @@
                               <h4 class="card-title">
                                 "{{ recommendation["record"].title  }}"
                               </h4>
-                              <p class="card-text"> by {{ recommendation["record"].authors_short  }}. {{ recommendation["record"].preprint_year}}</p>
+                              <p class="card-text"> by {{ recommendation["record"].authors_short  }} {{ recommendation["record"].preprint_year}}</p>
                           </div>
                           
                           <div class="card-footer">
