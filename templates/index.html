@@ -3,81 +3,78 @@
 
 
 {% block navbar %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" role="navigation">
-	<div class="container">
-		<a class="navbar-brand" href="{{ url_for('index') }}"> <strong> HEP Recommender - Find related articles you missed </strong></a>
-	</div>
-</nav>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" role="navigation" >
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}"> <strong> HEP Recommender - Find related articles you missed </strong></a>
+        </div>
+    </nav>
 {% endblock %}
 
 {% block content %}
-<!-- Page Content -->
-<div class="container">
-	<!-- Jumbotron Header -->
-	<header class="jumbotron my-4">
+  <!-- Page Content -->
+  <div class="container">
+     <!-- Jumbotron Header -->
+    <header class="jumbotron my-4">
 
-		<div class="row">
-			<div class="col-md-4">
-				<form method="GET" action="/">
-					<div class="form-group">
-						{{ form.article.label }} {{ form.article(size=50) }}
-					</div>
-					<button type="submit" class="btn btn-primary">Find related articles</button>
-				</form>
-			</div>
-		</div>
+       <div class="row">
+           <div class="col-md-4">
+             <form method="GET" action="/">
+                <div class="form-group">
+                {{ form.article.label }} {{ form.article(size=50) }}
+                </div>
+                <button type="submit" class="btn btn-primary">Find related articles</button>
+              </form>
+            </div>
+       </div>
 
-		{% if article %}
-		{% if recommendations %}
-		<hr class="my-4">
-		<p>
-			<a href=https://labs.inspirehep.net/literature/ {{ article["id"] }}>
-				<h3> "{{ article["record"].title  }}" </h3>
-			</a>
-			<h5> by {{ article["record"].authors_short  }} {{ article["record"].preprint_year}}</h5>
-		</p>
-		<p> <a target="_blank" rel="noopener noreferrer" href=https://labs.inspirehep.net/literature/ {{ article["id"] }} class="btn btn-primary"> Open on INSPIRE </a>
-		</p>
+      {% if article %}
+      {% if recommendations %}
+       <hr class="my-4">
+       <p>
+            <a href=https://labs.inspirehep.net/literature/{{ article["id"] }}> <h3> "{{ article["record"].title  }}" </h3>
+           </a>
+           <h5> by {{ article["record"].authors_short  }} {{ article["record"].preprint_year}}</h5>
+       </p>
+       <p> <a target="_blank" rel="noopener noreferrer" href=https://labs.inspirehep.net/literature/{{ article["id"] }} class="btn btn-primary"> Open on INSPIRE </a>
+       </p>
 
-	</header>
-	<p class="text-center">
-		<h2> Recommendations </h2>
-		<p>
+    </header>
+   <p class="text-center"> <h2> Recommendations </h2> <p>
 
 
-			<!-- Page Features -->
+    <!-- Page Features -->
 
-			{% for recommendation in recommendations %}
+                         {% for recommendation in recommendations %}
 
-			<div class="card mb-4">
+                      <div class="card mb-4">
 
-				<!--<img class="card-img-top" src="http://placehold.it/500x325" alt=""> -->
+                          <!--<img class="card-img-top" src="http://placehold.it/500x325" alt=""> -->
 
-				<div class="card-body">
-					<h4 class="card-title">
-						"{{ recommendation["record"].title  }}"
-					</h4>
-					<p class="card-text"> by {{ recommendation["record"].authors_short  }} {{ recommendation["record"].preprint_year}}</p>
-				</div>
+                          <div class="card-body">
+                              <h4 class="card-title">
+                                "{{ recommendation["record"].title  }}"
+                              </h4>
+                              <p class="card-text"> by {{ recommendation["record"].authors_short  }} {{ recommendation["record"].preprint_year}}</p>
+                          </div>
 
-				<div class="card-footer">
-					<a target="_blank" rel="noopener noreferrer" href=https://labs.inspirehep.net/literature/ {{ recommendation["id"] }} class="btn btn-primary btn-sm"> Open on INSPIRE </a>
-				</div>
-			</div>
+                          <div class="card-footer">
+                             <a target="_blank" rel="noopener noreferrer" href=https://labs.inspirehep.net/literature/{{ recommendation["id"] }} class="btn btn-primary btn-sm"> Open on INSPIRE </a>
+                          </div>
+                     </div>
 
 
-			{% endfor %}
-			{% else %}
-			<br>
-			<h3>Sorry, we cannot provide yet recommendations for this article.</h3>
-			{% endif %}
-			{% endif %}
-			<!-- /.row -->
+                         {% endfor %}
+               {% else %}
+                    <br>
+                    <h3>Sorry, we dont have recommendations for this article</h3>
+               {% endif %}
+           {% endif %}
+    <!-- /.row -->
 
-</div>
-<!-- /.container -->
+  </div>
+  <!-- /.container -->
 
-<!-- Footer -->
+  <!-- Footer -->
 <!--  <footer class="py-5 bg-dark">
     <div class="container">
       <p class="m-0 text-center text-white">Copyright &copy; Your Website 2019</p>
