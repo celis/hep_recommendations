@@ -85,7 +85,7 @@ class LiteratureRecord:
         :return:
         """
         if "preprint_date" in self.metadata:
-            return self.metadata["preprint_date"].split('-')[0]
+            return f"({self.metadata['preprint_date'].split('-')[0]})"
         return ""
 
     @property
