@@ -8,7 +8,6 @@ from inspirehep_api_wrapper.service.inspire_api import InspireAPI
 import boto3
 import numpy as np
 import configparser
-import logging
 import os
 
 
@@ -156,12 +155,9 @@ def index():
         }
 
         if article['id'] in model.vocabulary():
-            app.logger.info(f"recommendations for article {article['id']} served with Skip-Gram model")
             recommendations = model.most_similar(article["id"])
 
         elif article['record'].references:
-            app.logger.info(f"recommendations for article {article['id']} served with backup model")
-
             references_mean_vector = model.mean_vector(article['record'].references)
             recommendations = model.most_similar_by_vector(references_mean_vector)
 
@@ -180,9 +176,6 @@ def index():
 
 
 if __name__ == "__main__":
-    gunicorn_logger = logging.getLogger('gunicorn.error')
-    app.logger.handlers = gunicorn_logger.handlers
-    app.logger.setLevel(gunicorn_logger.level)
 
     # Threaded option to enable multiple instances for multiple user access support
     app.run(threaded=True, port=5000, debug=True)
