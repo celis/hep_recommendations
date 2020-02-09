@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from gensim.models import KeyedVectors
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
@@ -6,6 +6,7 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 from inspirehep_api_wrapper.service.inspire_api import InspireAPI
 import boto3
+import numpy as np
 import configparser
 import os
 
@@ -57,9 +58,11 @@ class InputForm(FlaskForm):
     """
     Allows users to enter an INSPIRE article id
     """
+    class Meta:
+        csrf = False
 
-    article = StringField("Enter an INSPIRE article id", validators=[DataRequired()])
-    submit = SubmitField("Submit")
+    article = StringField("<h5> Enter an INSPIRE article id </h5>", validators=[DataRequired()])
+    submit = SubmitField("Find related articles")
 
 
 class GensimWrapper:
@@ -82,6 +85,16 @@ class GensimWrapper:
         Predicts most similar items
         """
         return [article[0] for article in self._model.similar_by_word(article, topn)]
+
+    def mean_vector(self, articles: list):
+        articles = [article for article in articles if article in self.vocabulary()]
+        if len(articles) >= 1:
+            return np.mean(self._model[articles], axis=0)
+        else:
+            return []
+
+    def most_similar_by_vector(self, article, topn: int = 5):
+        return [article[0] for article in self._model.similar_by_vector(article, topn)]
 
     def vocabulary(self):
         """
@@ -126,21 +139,29 @@ bootstrap.init_app(app)
 config = Configuration()
 model = load_model(config)
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET"])
 def index():
     global model
     article = None
     recommendations = None
-    form = InputForm()
+    form = InputForm(request.args)
     inspire_api = InspireAPI()
-    if form.validate_on_submit():
-        article = form.article.data
-        if article in model.vocabulary():
-            article = {
-                "id": article,
-                "record": inspire_api.literature(article).to_record(),
-            }
+    if form.validate():
+        article = request.args.get("article")
+
+        article = {
+            "id": article,
+            "record": inspire_api.literature(article).to_record(),
+        }
+
+        if article['id'] in model.vocabulary():
             recommendations = model.most_similar(article["id"])
+
+        elif article['record'].references:
+            references_mean_vector = model.mean_vector(article['record'].references)
+            recommendations = model.most_similar_by_vector(references_mean_vector)
+
+        if recommendations:
             recommendations = [
                 {
                     "id": recommendation,
@@ -148,11 +169,13 @@ def index():
                 }
                 for recommendation in recommendations
             ]
+
     return render_template(
         "index.html", form=form, article=article, recommendations=recommendations
     )
 
 
 if __name__ == "__main__":
+
     # Threaded option to enable multiple instances for multiple user access support
-    app.run(threaded=True, port=5000)
+    app.run(threaded=True, port=5000, debug=True)

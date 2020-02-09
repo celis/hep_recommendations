@@ -2,18 +2,35 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 
-{% block title %} HEP Recommender {% endblock %}
+{% block head %}
+{{super()}}
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="{{ url_for('.static', filename='css/heroic-features.css') }}">
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+{% endblock %}
+
+{% block title %} HEP Recommender - Find related articles you missed {% endblock %}
 
 <a class="navbar-brand" href="{{ url_for('main.index') }}">
-	HEP Recommender
+	HEP Recommender - Find related articles you missed
 </a>
-
 
 {% block navbar %}
 <nav class="navbar navbar-inverse" role="navigation">
 	<div class="container">
 		<a class="navbar-brand" href="{{ url_for('index') }}">
-			Recommender
+			HEP Recommender
 		</a>
 	</div>
 </nav>
