@@ -30,9 +30,7 @@
       {% if recommendations %}
        <hr class="my-4">
        <p>
-            <a href=https://labs.inspirehep.net/literature/{{ article["id"] }}>
-               <h5> "{{ article["record"].title  }}" </h5>
-           </a>
+            <a href=https://labs.inspirehep.net/literature/{{ article["id"] }}> <h5> "{{ article["record"].title  }}" </h5> </a>
             by {{ article["record"].authors_short  }} {{ article["record"].preprint_year}}
        </p>
 
@@ -41,6 +39,7 @@
        </p>
 
     </header>
+
    <p class="text-center"> <h2> Recommendations </h2> <p>
 
     <!-- Page Features -->
@@ -70,9 +69,9 @@
                {% endif %}
 
            {% endif %}
-    <!-- /.row -->
 
-  </div>
+        </div>
+
 
  {% if not recommendations %}
   <div class="container">
@@ -80,16 +79,14 @@
           <p>
               We provide recommendations of related articles using data from
               <a target="_blank" rel="noopener noreferrer" href=https://labs.inspirehep.net>
-              INSPIRE-HEP
-           </a>
+              INSPIRE-HEP</a>
           </p>
 
           <p>
           You can find the INSPIRE article id on the URL of an article. <br>
               For example, the following article by Peter W. Higgs
           <a target="_blank" rel="noopener noreferrer" href=https://labs.inspirehep.net/literature/11883>
-              https://labs.inspirehep.net/literature/11883
-           </a>
+              https://labs.inspirehep.net/literature/11883 </a>
               has the id 11883
           </p>
        </div>
