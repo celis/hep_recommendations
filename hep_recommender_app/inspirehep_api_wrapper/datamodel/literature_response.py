@@ -1,5 +1,5 @@
 from requests import Response
-from inspirehep_api_wrapper.datamodel.literature_record import LiteratureRecord
+from hep_recommender_app.inspirehep_api_wrapper.datamodel.literature_record import LiteratureRecord
 from typing import Dict, Any
 
 
