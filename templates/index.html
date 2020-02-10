@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 
-
 {% block navbar %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" role="navigation" >
         <div class="container">
@@ -31,29 +30,29 @@
       {% if recommendations %}
        <hr class="my-4">
        <p>
-            <a href=https://labs.inspirehep.net/literature/{{ article["id"] }}> <h3> "{{ article["record"].title  }}" </h3>
+            <a href=https://labs.inspirehep.net/literature/{{ article["id"] }}>
+               <h5> "{{ article["record"].title  }}" </h5>
            </a>
-           <h5> by {{ article["record"].authors_short  }} {{ article["record"].preprint_year}}</h5>
+            by {{ article["record"].authors_short  }} {{ article["record"].preprint_year}}
        </p>
-       <p> <a target="_blank" rel="noopener noreferrer" href=https://labs.inspirehep.net/literature/{{ article["id"] }} class="btn btn-primary"> Open on INSPIRE </a>
+
+        <p>
+           <a target="_blank" rel="noopener noreferrer" href=https://labs.inspirehep.net/literature/{{ article["id"] }} class="btn btn-primary"> Open on INSPIRE </a>
        </p>
 
     </header>
    <p class="text-center"> <h2> Recommendations </h2> <p>
 
-
     <!-- Page Features -->
 
-                         {% for recommendation in recommendations %}
+                     {% for recommendation in recommendations %}
 
-                      <div class="card mb-4">
-
-                          <!--<img class="card-img-top" src="http://placehold.it/500x325" alt=""> -->
+                     <div class="card mb-4">
 
                           <div class="card-body">
-                              <h4 class="card-title">
+                              <h5 class="card-title">
                                 "{{ recommendation["record"].title  }}"
-                              </h4>
+                              </h5>
                               <p class="card-text"> by {{ recommendation["record"].authors_short  }} {{ recommendation["record"].preprint_year}}</p>
                           </div>
 
@@ -63,11 +62,13 @@
                      </div>
 
 
-                         {% endfor %}
+                     {% endfor %}
+
                {% else %}
                     <br>
                     <h3>Sorry, we dont have recommendations for this article</h3>
                {% endif %}
+
            {% endif %}
     <!-- /.row -->
 
@@ -95,14 +96,5 @@
   </div>
  {% endif %}
 
-  <!-- /.container -->
-
-  <!-- Footer -->
-<!--  <footer class="py-5 bg-dark">
-    <div class="container">
-      <p class="m-0 text-center text-white">Copyright &copy; Your Website 2019</p>
-    </div>
-    </footer>
- -->
 
 {% endblock %}
