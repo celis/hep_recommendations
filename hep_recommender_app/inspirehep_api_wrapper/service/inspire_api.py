@@ -1,5 +1,7 @@
 import requests
-from hep_recommender_app.inspirehep_api_wrapper.datamodel.literature_response import LiteratureResponse
+from hep_recommender_app.inspirehep_api_wrapper.datamodel.literature_response import (
+    LiteratureResponse,
+)
 
 
 class InspireAPI:
@@ -23,4 +25,4 @@ class InspireAPI:
         return LiteratureResponse(requests.get(url))
 
     def data(self, record_id):
-        return {"id": record_id, "record": self.literature(record_id).to_record().summary}
+        return {"id": record_id, "record": self.literature(record_id).to_record()}
