@@ -23,4 +23,4 @@ class InspireAPI:
         return LiteratureResponse(requests.get(url))
 
     def data(self, record_id):
-        return {"id": record_id, "record": self.literature(record_id).to_record()}
+        return {"id": record_id, "record": self.literature(record_id).to_record().summary}

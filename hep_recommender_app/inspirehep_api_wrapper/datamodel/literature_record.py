@@ -12,6 +12,14 @@ class LiteratureRecord:
         self.data = data
 
     @property
+    def summary(self):
+        return {
+                   "authors_short": self.authors_short,
+                   "title": self.title,
+                   "preprint_year": self.preprint_year
+        }
+
+    @property
     def metadata(self) -> Dict[str, Any]:
         if "metadata" in self.data:
             return self.data["metadata"]
