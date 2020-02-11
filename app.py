@@ -15,6 +15,7 @@ bootstrap.init_app(app)
 config = Configuration()
 model = load_model(config)
 
+
 @app.route("/", methods=["GET"])
 def index():
     global model
@@ -27,17 +28,16 @@ def index():
 
         article = inspire_api.data(article)
 
-        if article['id'] in model.vocabulary():
+        if article["id"] in model.vocabulary():
             recommendations = model.most_similar(article["id"])
 
-        elif article['record'].references:
-            references_mean_vector = model.mean_vector(article['record'].references)
+        elif article["record"].references:
+            references_mean_vector = model.mean_vector(article["record"].references)
             recommendations = model.most_similar_by_vector(references_mean_vector)
 
         if recommendations:
             recommendations = [
-                inspire_api.data(recommendation)
-                for recommendation in recommendations
+                inspire_api.data(recommendation) for recommendation in recommendations
             ]
 
     return render_template(

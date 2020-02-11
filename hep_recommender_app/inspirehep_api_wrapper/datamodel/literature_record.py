@@ -12,99 +12,38 @@ class LiteratureRecord:
         self.data = data
 
     @property
-    def summary(self):
-        return {
-                   "authors_short": self.authors_short,
-                   "title": self.title,
-                   "preprint_year": self.preprint_year
-        }
-
-    @property
-    def metadata(self) -> Dict[str, Any]:
-        if "metadata" in self.data:
-            return self.data["metadata"]
-
-    @property
     def references(self) -> List[str]:
-        if self.metadata and self.metadata.get("references"):
-            return [
-                element["record"]["$ref"].split("/")[-1]
-                for element in self.metadata["references"]
-                if element.get("record")
-            ]
-
-    @property
-    def authors(self) -> List[str]:
-        """
-        returns the article authors.
-        """
-        if "authors" in self.metadata:
-            return [author.get("full_name") for author in self.metadata["authors"]]
+        return [
+            element["record"]["$ref"].split("/")[-1]
+            for element in self.data["references"]
+            if element.get("record")
+        ]
 
     @property
     def authors_short(self) -> str:
-        if "authors" in self.metadata:
-            if len(self.metadata["authors"]) > self.MAX_AUTHORS:
-                return "; ".join(
-                    [
-                        author.get("full_name")
-                        for author in self.metadata["authors"][: self.MAX_AUTHORS]
-                    ]
-                    + ["et. al."]
-                )
-            else:
-                return "; ".join(
-                    [author.get("full_name") for author in self.metadata["authors"]]
-                )
-        return ""
-
-    @property
-    def doi(self) -> str:
-        """
-        Returns the article DOI code
-        """
-        if "dois" in self.metadata:
-            return self.metadata["dois"][0].get("value")
-
-    @property
-    def arxiv(self) -> Dict[str, str]:
-        """
-        returns the article data
-        """
-        if "arxiv_eprints" in self.metadata:
-            return {
-                "eprint": self.metadata["arxiv_eprints"][0].get("value"),
-                "url": "https://arxiv.org/abs/"
-                + self.metadata["arxiv_eprints"][0].get("value"),
-            }
+        if len(self.data["authors"]) > self.MAX_AUTHORS:
+            return "; ".join(
+                [
+                    author.get("full_name")
+                    for author in self.data["authors"][: self.MAX_AUTHORS]
+                ]
+                + ["et. al."]
+            )
+        else:
+            return "; ".join(
+                [author.get("full_name") for author in self.data["authors"]]
+            )
 
     @property
     def title(self) -> str:
         """
         Returns title as it appears on inspire
         """
-        if "titles" in self.metadata:
-            return self.metadata["titles"][0].get("title")
-        return ""
+        return self.data["titles"][0].get("title")
 
     @property
     def preprint_year(self) -> str:
         """
         :return:
         """
-        if "preprint_date" in self.metadata:
-            return f"({self.metadata['preprint_date'].split('-')[0]})"
-        return ""
-
-    @property
-    def journal(self) -> Dict[str, Any]:
-        """
-        returns journal information
-        """
-        if "publication_info" in self.metadata:
-            return {
-                "title": self.metadata["publication_info"][0].get("journal_title"),
-                "volume": self.metadata["publication_info"][0].get("journal_volume"),
-                "page_start": self.metadata["publication_info"][0].get("page_start"),
-                "year": self.metadata["publication_info"][0].get("year"),
-            }
+        return f"({self.data['preprint_date'].split('-')[0]})"
