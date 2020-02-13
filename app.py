@@ -5,7 +5,7 @@ from hep_recommender_app.recommender.forms import InputForm
 from hep_recommender_app.inspirehep_api_wrapper.service.inspire_api import InspireAPI
 from hep_recommender_app.configuration import Configuration
 from hep_recommender_app.utils import load_model
-
+from hep_recommender_app.recommender.model import RecommenderModel
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "top secret!"
@@ -13,7 +13,8 @@ bootstrap = Bootstrap()
 bootstrap.init_app(app)
 
 config = Configuration()
-model = load_model(config)
+gensim_wrapper = load_model(config)
+model = RecommenderModel(gensim_wrapper)
 
 
 @app.route("/", methods=["GET"])
@@ -23,17 +24,13 @@ def index():
     recommendations = None
     form = InputForm(request.args)
     inspire_api = InspireAPI()
+
     if form.validate():
         article = request.args.get("article")
 
         article = inspire_api.data(article)
 
-        if article["id"] in model.vocabulary():
-            recommendations = model.most_similar(article["id"])
-
-        elif article["record"].references:
-            references_mean_vector = model.mean_vector(article["record"].references)
-            recommendations = model.most_similar_by_vector(references_mean_vector)
+        recommendations = model.predict(article)
 
         if recommendations:
             recommendations = [
