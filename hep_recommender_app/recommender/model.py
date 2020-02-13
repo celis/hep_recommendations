@@ -1,4 +1,5 @@
 import numpy as np
+from typing import Dict, List
 from gensim.models import KeyedVectors
 
 
@@ -38,3 +39,31 @@ class GensimWrapper:
         Returns all articles which have embeddings
         """
         return [recid for recid in self._model.vocab]
+
+
+class RecommenderModel:
+    """
+    Main recommender model class to be used in the application
+    """
+
+    def __init__(self, gensim_wrapper: GensimWrapper):
+        self.gensim_wrapper = gensim_wrapper
+
+    def predict(self, article: Dict, topn: int = 5) -> List[str]:
+        """
+        :param article:  dictionary with keys "id" and "record"
+        :return: recommendations as a list of article ids
+        """
+        if article["id"] in self.gensim_wrapper.vocabulary():
+            recommendations = self.gensim_wrapper.most_similar(article["id"], topn)
+
+        elif article["record"].references:
+            references_mean_vector = self.gensim_wrapper.mean_vector(
+                article["record"].references
+            )
+            recommendations = self.gensim_wrapper.most_similar_by_vector(
+                references_mean_vector, topn
+            )
+
+        if recommendations:
+            return recommendations
