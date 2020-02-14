@@ -20,13 +20,22 @@ class LiteratureResponse:
 
     @property
     def data(self) -> Dict[str, Any]:
-        response = self.api_literature_response.json()["metadata"]
-        response = {
-            self.REFERENCES: response.get(self.REFERENCES, []),
-            self.AUTHORS: response.get(self.AUTHORS, ""),
-            self.TITLES: response.get(self.TITLES, ""),
-            self.PREPRINT_DATE: response.get(self.PREPRINT_DATE, ""),
-        }
+        response = self.api_literature_response.json()
+        if response.get("metadata"):
+            response = response["metadata"]
+            response = {
+                self.REFERENCES: response.get(self.REFERENCES, []),
+                self.AUTHORS: response.get(self.AUTHORS, ""),
+                self.TITLES: response.get(self.TITLES, ""),
+                self.PREPRINT_DATE: response.get(self.PREPRINT_DATE, ""),
+            }
+        else:
+            response = {
+                self.REFERENCES: [],
+                self.AUTHORS: "",
+                self.TITLES: "",
+                self.PREPRINT_DATE: "",
+            }
         return response
 
     def to_record(self) -> LiteratureRecord:

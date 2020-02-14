@@ -54,6 +54,8 @@ class RecommenderModel:
         :param article:  dictionary with keys "id" and "record"
         :return: recommendations as a list of article ids
         """
+        recommendations = None
+
         if article["id"] in self.gensim_wrapper.vocabulary():
             recommendations = self.gensim_wrapper.most_similar(article["id"], topn)
 
@@ -65,5 +67,4 @@ class RecommenderModel:
                 references_mean_vector, topn
             )
 
-        if recommendations:
-            return recommendations
+        return recommendations
