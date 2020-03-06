@@ -27,7 +27,6 @@ def index():
 
     if form.validate():
         article = request.args.get("article")
-        article = article.strip()
 
         article = inspire_api.data(article)
 
