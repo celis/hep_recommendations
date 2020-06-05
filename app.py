@@ -19,7 +19,6 @@ model = RecommenderModel(gensim_wrapper)
 
 @app.route("/", methods=["GET"])
 def index():
-    global model
     article = None
     recommendations = None
     form = InputForm(request.args)
