@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from flask_bootstrap import Bootstrap
-
+import json
 from hep_recommender_app.recommender.forms import InputForm
 from hep_recommender_app.inspirehep_api_wrapper.service.inspire_api import InspireAPI
 from hep_recommender_app.configuration import Configuration
@@ -15,6 +15,14 @@ bootstrap.init_app(app)
 config = Configuration()
 gensim_wrapper = load_model(config)
 model = RecommenderModel(gensim_wrapper)
+inspire_api = InspireAPI()
+
+
+@app.route("/api/<id>", methods=["GET"])
+def recommendations(id):
+    article = inspire_api.data(id)
+    recommendations = model.predict(article)
+    return json.dumps(recommendations)
 
 
 @app.route("/", methods=["GET"])
@@ -22,7 +30,6 @@ def index():
     article = None
     recommendations = None
     form = InputForm(request.args)
-    inspire_api = InspireAPI()
 
     if form.validate():
         article = request.args.get("article")
