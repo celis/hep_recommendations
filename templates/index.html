@@ -30,12 +30,12 @@
       {% if recommendations %}
        <hr class="my-4">
        <p>
-            <a href=https://labs.inspirehep.net/literature/{{ article["id"] }}> <h5> "{{ article["record"].title  }}" </h5> </a>
+            <a href=https://inspirehep.net/literature/{{ article["id"] }}> <h5> "{{ article["record"].title  }}" </h5> </a>
             by {{ article["record"].authors_short  }} {{ article["record"].preprint_year}}
        </p>
 
         <p>
-           <a target="_blank" rel="noopener noreferrer" href=https://labs.inspirehep.net/literature/{{ article["id"] }} class="btn btn-primary"> Open on INSPIRE </a>
+           <a target="_blank" rel="noopener noreferrer" href=https://inspirehep.net/literature/{{ article["id"] }} class="btn btn-primary"> Open on INSPIRE </a>
        </p>
 
     </header>
@@ -56,7 +56,7 @@
                           </div>
 
                           <div class="card-footer">
-                             <a target="_blank" rel="noopener noreferrer" href=https://labs.inspirehep.net/literature/{{ recommendation["id"] }} class="btn btn-primary btn-sm"> Open on INSPIRE </a>
+                             <a target="_blank" rel="noopener noreferrer" href=https://inspirehep.net/literature/{{ recommendation["id"] }} class="btn btn-primary btn-sm"> Open on INSPIRE </a>
                              <a href=/?article={{ recommendation["id"] }} class="btn btn-secondary btn-sm"> Recommendations </a>
                           </div>
                      </div>
@@ -79,15 +79,15 @@
       <div class="alert alert-light" role="alert">
           <p>
               We provide recommendations of related articles using data from
-              <a target="_blank" rel="noopener noreferrer" href=https://labs.inspirehep.net>
+              <a target="_blank" rel="noopener noreferrer" href=https://inspirehep.net>
               INSPIRE-HEP</a>
           </p>
 
           <p>
           You can find the INSPIRE article id on the URL of an article. <br>
               For example, the following article by Peter W. Higgs
-          <a target="_blank" rel="noopener noreferrer" href=https://labs.inspirehep.net/literature/11883>
-              https://labs.inspirehep.net/literature/11883 </a>
+          <a target="_blank" rel="noopener noreferrer" href=https://inspirehep.net/literature/11883>
+              https://inspirehep.net/literature/11883 </a>
               has the id 11883
           </p>
           <a style="font-size: 14px; color:#000000" href="mailto:contact@hep-recommender.com">Contact</a>

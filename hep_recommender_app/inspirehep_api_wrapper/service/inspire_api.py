@@ -12,7 +12,7 @@ class InspireAPI:
        literature: gives access to the literature endpoint
     """
 
-    LITERATURE = "https://labs.inspirehep.net/api/literature/"
+    LITERATURE = "https://inspirehep.net/api/literature/"
 
     def __init__(self):
         pass
