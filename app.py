@@ -6,9 +6,12 @@ from hep_recommender_app.inspirehep_api_wrapper.service.inspire_api import Inspi
 from hep_recommender_app.configuration import Configuration
 from hep_recommender_app.utils import load_model
 from hep_recommender_app.recommender.model import RecommenderModel
+import os
+
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "top secret!"
+app.jinja_env.globals.update('GOOGLE_ANALYTICS_TRACKING_ID'=os.environ.get('GOOGLE_ANALYTICS_TRACKING_ID'))
 bootstrap = Bootstrap()
 bootstrap.init_app(app)
 
