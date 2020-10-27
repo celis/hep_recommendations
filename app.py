@@ -11,7 +11,7 @@ import os
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "top secret!"
-app.jinja_env.globals.update('GOOGLE_ANALYTICS_TRACKING_ID'=os.environ.get('GOOGLE_ANALYTICS_TRACKING_ID'))
+app.jinja_env.globals.update(GOOGLE_ANALYTICS_TRACKING_ID=os.environ.get('GOOGLE_ANALYTICS_TRACKING_ID'))
 bootstrap = Bootstrap()
 bootstrap.init_app(app)
 
